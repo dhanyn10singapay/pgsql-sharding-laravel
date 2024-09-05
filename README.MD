@@ -19,12 +19,6 @@
 3. in laravel, set `.env` file for the scheme data
     ```bash
     DB_CONNECTION=pgsql1
-    DB_HOST=127.0.0.1
-    DB_PORT=5432
-    DB_DATABASE=postgres
-    DB_USERNAME=postgres
-    DB_PASSWORD=password
-
     DB_CONNECTION=pgsql2
     DB_HOST=127.0.0.1
     DB_PORT=5432
