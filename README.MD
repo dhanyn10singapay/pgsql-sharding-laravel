@@ -27,7 +27,8 @@
     ```
 4. also, set file **database** located in `/config/database.php` to be similar to following
     ```php
-        'pgsql' => [
+        
+        'pgsql1' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -38,15 +39,35 @@
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
-            'search_path' => "*",
+            'search_path' => "tenant_1",
+            'sslmode' => 'prefer',
+        ],
+        
+        'pgsql2' => [
+            'driver' => 'pgsql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '5432'),
+            'database' => env('DB_DATABASE'),
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => "tenant_2",
             'sslmode' => 'prefer',
         ],
     ```
-5. create new migration file in laravel
+5. update laravel cache
+    ```bash
+    php artisan config:clear
+    php artisan config:cache
+    ```
+6. create new migration file in laravel
     ```bash
     php artisan make:migration create_user_table
     ```
-6. fill like following example
+7. fill like following example
     ```php
     <?php
 
@@ -78,14 +99,14 @@
     };
 
     ```
-7. Make sure you've already login to postgres in citus. Then create new scheme `tenant_1` and `tenant_2` with pgadmin4
+8. Make sure you've already login to postgres in citus. Then create new scheme `tenant_1` and `tenant_2` with pgadmin4
     ![](/scheme-tenant.png)
-8. Run migration
+9. Run migration
     ```bash
     php artisan migrate:fresh --database=pgsql1
     php artisan migrate:fresh --database=pgsql2
     ```
-9. Create new model for user that will connected to `tenant_1` and `tenant_2`
+10. Create new model for user that will connected to `tenant_1` and `tenant_2`
     ```bash
     php artisan make:model User1
     php artisan make:model User2
@@ -111,7 +132,7 @@
     }
     ```
     do the similar way for `tenant_2`
-10. below is sample controller for simple create new record to postgres
+11. below is sample controller for simple create new record to postgres
     ```php
     <?php
     namespace App\Http\Controllers;
